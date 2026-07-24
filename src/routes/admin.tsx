@@ -67,8 +67,7 @@ function AdminPage() {
   const save = useServerFn(upsertProduct);
   const remove = useServerFn(deleteProduct);
 
-  useEffect(() => {
-      /* DESACTIVAMOS EL LOGIN DE SUPABASE PARA ENTRAR DIRECTO
+  /* DESACTIVAMOS EL LOGIN DE SUPABASE PARA ENTRAR DIRECTO
   useEffect(() => {
     supabase.auth.getSession().then(async ({ data }) => {
       if (!data.session) { navigate({ to: "/login", replace: true }); return; }
@@ -77,6 +76,7 @@ function AdminPage() {
     });
   }, [navigate, checkAdmin]);
   */
+
   const { data: products = [] } = useQuery({
     queryKey: ["admin-products"],
     queryFn: () => fetchAll(),
