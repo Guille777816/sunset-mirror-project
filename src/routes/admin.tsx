@@ -67,8 +67,7 @@ function AdminPage() {
   const save = useServerFn(upsertProduct);
   const remove = useServerFn(deleteProduct);
 
-  useEffect(() => {
-      /* DESACTIVAMOS EL LOGIN DE SUPABASE PARA ENTRAR DIRECTO
+  /* DESACTIVAMOS EL LOGIN DE SUPABASE PARA ENTRAR DIRECTO
   useEffect(() => {
     supabase.auth.getSession().then(async ({ data }) => {
       if (!data.session) { navigate({ to: "/login", replace: true }); return; }
@@ -77,6 +76,7 @@ function AdminPage() {
     });
   }, [navigate, checkAdmin]);
   */
+
   const { data: products = [] } = useQuery({
     queryKey: ["admin-products"],
     queryFn: () => fetchAll(),
@@ -474,7 +474,7 @@ function ProductForm({
   error: any;
 }) {
   const [p, setP] = useState<Product>(value);
-  const set = <K extends keyof Product>(k: K, v: Product[K]) => setP({ ...p, [k]: v });
+  const set = <K extends keyof Product,>(k: K, v: Product[K]) => setP({ ...p, [k]: v });
 
   return (
     <div className="fixed inset-0 z-50 grid place-items-center bg-black/50 p-4" onClick={onCancel}>
@@ -625,7 +625,7 @@ function SettingsPanel() {
   }
 
   if (!s) return null;
-  const set = <K extends keyof Settings>(k: K, v: Settings[K]) => setS({ ...s, [k]: v });
+  const set = <K extends keyof Settings,>(k: K, v: Settings[K]) => setS({ ...s, [k]: v });
 
   return (
     <div className="space-y-6">
