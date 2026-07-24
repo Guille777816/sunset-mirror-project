@@ -56,8 +56,8 @@ type Tab = "productos" | "pedidos" | "banners" | "testimonios" | "imagenes" | "a
 function AdminPage() {
   const navigate = useNavigate();
   const qc = useQueryClient();
-  const [ready, setReady] = useState(true);
-  const [isAdmin, setIsAdmin] = useState(true);
+  const [ready, setReady] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
   const [editing, setEditing] = useState<Product | null>(null);
   const [tab, setTab] = useState<Tab>("productos");
   const [filterCat, setFilterCat] = useState<string>("todas");
@@ -67,15 +67,30 @@ function AdminPage() {
   const save = useServerFn(upsertProduct);
   const remove = useServerFn(deleteProduct);
 
-  /* DESACTIVAMOS EL LOGIN DE SUPABASE PARA ENTRAR DIRECTO
   useEffect(() => {
+    let cancelled = false;
+
     supabase.auth.getSession().then(async ({ data }) => {
-      if (!data.session) { navigate({ to: "/login", replace: true }); return; }
-      try { const r = await checkAdmin(); setIsAdmin(r.isAdmin); } catch { setIsAdmin(false); }
-      setReady(true);
+      if (cancelled) return;
+      if (!data.session) {
+        navigate({ to: "/login", replace: true });
+        return;
+      }
+
+      try {
+        const r = await checkAdmin();
+        if (!cancelled) setIsAdmin(r.isAdmin);
+      } catch {
+        if (!cancelled) setIsAdmin(false);
+      } finally {
+        if (!cancelled) setReady(true);
+      }
     });
+
+    return () => {
+      cancelled = true;
+    };
   }, [navigate, checkAdmin]);
-  */
 
   const { data: products = [] } = useQuery({
     queryKey: ["admin-products"],
