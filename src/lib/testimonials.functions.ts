@@ -24,7 +24,10 @@ const submitSchema = z.object({
 export const submitTestimonial = createServerFn({ method: "POST" })
   .inputValidator((input: unknown) => submitSchema.parse(input))
   .handler(async ({ data }) => {
-    const { error } = await supabase
+    // La política pública de INSERT fue removida; usamos el cliente admin
+    // en el servidor, tras validar el payload con zod.
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { error } = await supabaseAdmin
       .from("testimonials")
       .insert({ ...data, is_approved: false });
     if (error) throw new Error(error.message);
