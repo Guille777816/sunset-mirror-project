@@ -474,7 +474,7 @@ function ProductForm({
   error: any;
 }) {
   const [p, setP] = useState<Product>(value);
-  const set = <K extends keyof Product>(k: K, v: Product[K]) => setP({ ...p, [k]: v });
+  const set = <K extends keyof Product,>(k: K, v: Product[K]) => setP({ ...p, [k]: v });
 
   return (
     <div className="fixed inset-0 z-50 grid place-items-center bg-black/50 p-4" onClick={onCancel}>
@@ -625,7 +625,7 @@ function SettingsPanel() {
   }
 
   if (!s) return null;
-  const set = <K extends keyof Settings>(k: K, v: Settings[K]) => setS({ ...s, [k]: v });
+  const set = <K extends keyof Settings,>(k: K, v: Settings[K]) => setS({ ...s, [k]: v });
 
   return (
     <div className="space-y-6">
