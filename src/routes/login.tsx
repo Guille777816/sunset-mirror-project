@@ -40,13 +40,17 @@ function LoginPage() {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
       } else {
-        const { error } = await supabase.auth.signUp({
+        const { data, error } = await supabase.auth.signUp({
           email,
           password,
           options: { emailRedirectTo: window.location.origin },
         });
         if (error) throw error;
-        setError("Te enviamos un email para verificar tu cuenta.");
+        if (data.session) {
+          navigate({ to: "/admin", replace: true });
+          return;
+        }
+        setError("La cuenta quedó creada. Probá ingresar con el mismo email y contraseña.");
       }
     } catch (err: any) {
       setError(err?.message ?? "Error inesperado");
