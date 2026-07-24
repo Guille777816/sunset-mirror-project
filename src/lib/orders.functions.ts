@@ -54,7 +54,10 @@ export const createOrder = createServerFn({ method: "POST" })
       .eq("id", "main")
       .maybeSingle();
 
-    const { data: row, error } = await supabase
+    // Insertamos con el cliente admin: la política pública de INSERT fue removida
+    // para evitar creación arbitraria de pedidos desde el cliente. El servidor
+    // ya validó los precios contra la base.
+    const { data: row, error } = await supabaseAdmin
       .from("orders")
       .insert({
         customer_name: data.customer_name,
