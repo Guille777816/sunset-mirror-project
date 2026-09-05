@@ -22,13 +22,9 @@ function LoginPage() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_e, session) => {
-      if (session) navigate({ to: "/", replace: true });
-    });
     supabase.auth.getSession().then(({ data }) => {
-      if (data.session) navigate({ to: "/", replace: true });
+      if (data.session) navigate({ to: "/admin", replace: true });
     });
-    return () => subscription.unsubscribe();
   }, [navigate]);
 
   async function handleSubmit(e: React.FormEvent) {
@@ -39,6 +35,7 @@ function LoginPage() {
       if (mode === "login") {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
+        navigate({ to: "/admin", replace: true });
       } else {
         const { data, error } = await supabase.auth.signUp({
           email,
@@ -62,7 +59,7 @@ function LoginPage() {
   async function handleGoogle() {
     setError(null);
     const result = await lovable.auth.signInWithOAuth("google", {
-      redirect_uri: window.location.origin,
+      redirect_uri: window.location.origin + "/admin",
     });
     if (result.error) setError(String(result.error?.message ?? result.error));
   }
@@ -80,7 +77,7 @@ function LoginPage() {
             {mode === "login" ? "Iniciar sesión" : "Crear cuenta"}
           </h1>
           <p className="mt-1 text-sm text-muted-foreground">
-            {mode === "login" ? "Accedé para comprar y ver tus pedidos." : "Registrate para gestionar tus compras."}
+            {mode === "login" ? "Accedé al panel de administración." : "Registrate para gestionar la tienda."}
           </p>
 
           <button
