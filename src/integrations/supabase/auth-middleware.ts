@@ -83,8 +83,7 @@ export const requireSupabaseAuth = createMiddleware({ type: 'function' }).server
     );
 
     // ✅ FIX: usar getUser() en vez de getClaims()
-    const { data, error } = await supabase.auth.getUser(token);
-    if (error || !data?.user) {
+const { data, error } = await supabase.auth.getUser();    if (error || !data?.user) {
       throw new Error('Unauthorized: Invalid token');
     }
 
